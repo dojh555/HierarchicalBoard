@@ -1,0 +1,8 @@
+1. 개인정보 확인 -> 패스워드 인증 -> 개인정보 수정폼 으로 3개 페이지로 나누기
+
+2. 개인정보에 회원이 작성한 게시글 보이기
+
+3. 댓글 작업중(reply -board,member 두개테이블 조인해야함)
+
+
+<textarea id="rpContent2" name="rpContent2"></textarea>

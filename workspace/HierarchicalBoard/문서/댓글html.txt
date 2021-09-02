@@ -1,0 +1,67 @@
+<div class="area_reply">
+                                                        <div class="box_reply_info">
+                                                            <a href="#rp" onclick="" class="reply_events">
+                                                            <p class="item_info">댓글 <span class="thema_apply">
+                                                                    <span id="commentCount164_0">1</span>
+                                                                </span></p>
+                                                            </a>
+                                                            <button type="button" class="btn_fold"><span class="blind">댓글
+                                                                    접기</span></button>
+                                                            <button type="button" class="btn_spread" style="display: none;"><span class="blind">댓글 펼치기</span></button>
+                                                        </div>
+
+                                                        <div id="entry164Comment">
+                                                            <!-- reply_content -->
+                                                            <div class="reply_content">
+                                                                <button type="button" class="btn_more btn_replymore" style="display: none;">이전 댓글 더보기</button>
+
+                                                                <!-- box_comment_list -->
+                                                                <div class="box_comment_list">
+                                                                    
+                                                                        <div class="comment-list">
+                                                                            <ul>
+                                                                                
+                                                                                    <li id="comment6194848">
+                                                                                        <div class="author-meta">
+                                                                                            <img src="https://t1.daumcdn.net/tistory_admin/blog/admin/profile_default_06.png" class="avatar" alt="">
+                                                                                            <span class="nickname"><a href="https://docc-storage.tistory.com" onclick="return openLinkInNewWindow(this)">docc docc</a></span>
+                                                                                            <span class="date">2021.08.18 11:35</span>
+                                                                                        </div>
+                                                                                        <p>댓글 테스트</p>
+                                                                                        <div class="control">
+                                                                                            <a href="/164#comment6194848">댓글주소</a>
+                                                                                            <a href="#" onclick="deleteComment(6194848);return false">수정/삭제</a>
+                                                                                            <a href="#" onclick="commentComment(6194848); return false">댓글쓰기</a>
+                                                                                        </div>
+                                                                                        
+                                                                                    </li>
+                                                                                
+                                                                            </ul>
+                                                                        </div>
+                                                                    
+                                                                </div>
+                                                                <!-- // box_comment_list -->
+
+                                                                <form method="post" action="/comment/add/164" onsubmit="return false" style="margin: 0">
+                                                                    <!-- reply_write -->
+                                                                    
+                                                                        <div class="reply_write">
+
+                                                                            <div class="form_content thema_apply">
+                                                                                <textarea id="comment" name="comment" placeholder="댓글을 입력해주세요."></textarea>
+                                                                            </div>
+                                                                            
+
+                                                                            <div class="form_reg">
+                                                                                <button type="button" class="btn_register thema_apply" onclick="addComment(this, 164); return false;">등록</button>
+                                                                            </div>
+                                                                        </div>
+                                                                    </form>
+                                                                    <!-- // reply_write -->
+                                                                
+
+                                                            </div>
+                                                            <!-- // reply_content -->
+                                                        </div><script type="text/javascript">loadedComments[164]=true;findFragmentAndHighlight(164)</script>
+                                                    </div>
+                                                    <!-- article_content -->

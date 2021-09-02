@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="reply">
+
+	<!-- 댓글 달기 -->
+	<insert id="insertReply" parameterType="replyA">
+		insert into reply(rpNum,rpWriter,rpBNum,rpContent,rpRegdate)
+		values(reply_seq.nextval,#{rpWriter.memNum},#{rpBoard.bNum},#{rpContent},SYSDATE)
+	</insert>
+	
+	<!-- 댓글 총갯수 -->
+	<select id="selectCnt" resultType="Integer" parameterType="Integer">
+		select count(*) from reply
+		where rpBNum=#{rpBNum}
+	</select>
+	
+	<!-- 댓글 리스트 출력 -->
+	<select id="selectReply" resultMap="selectReplyMap" parameterType="map">
+		select * from ( select ROW_NUMBER() OVER(order by r.rpNum desc) row_num,
+        r.rpNum as rpNum,
+		r.rpContent as rpContent,
+		r.rpRegdate as rpRegdate,
+		m.memNum as memNum,
+		m.id as id,
+		m.memName as memName,
+		b.bNum as bNum
+		from reply r
+		inner join member m
+		on r.rpWriter = m.memNum
+		inner join board b
+		on r.rpBNum = b.bNum 
+        where r.rpBNum =#{bNum}
+		order by r.rpNum desc)
+		where rownum>=#{startNum} and rownum<![CDATA[<=]]>#{lastNum}
+	</select>
+	
+	<!-- 회원정보 댓글 이력 출력 -->
+	<select id="selectReplyMem" resultType="replyA" parameterType="Integer">
+		select * from reply
+		where rpWriter=#{rpWriter}
+	</select>
+
+	<!-- 댓글 수정 -->
+	<update id="updateReply" parameterType="replyA">
+		update reply set rpContent=#{rpContent}
+		where rpNum=#{rpNum}
+	</update>
+	
+	<!-- 댓글 삭제 -->
+	<delete id="deleteReply" parameterType="Integer">
+		delete from reply
+		where rpNum=#{rpNum}
+	</delete>
+	
+	<!-- 작성자,게시물 매핑 기반 -->
+	<resultMap id="selectReplyMap" type="replyA">
+		<id property="rpNum" column="rpNum"/>
+		<result property="rpContent" column="rpContent"/>
+		<result property="rpRegdate" column="rpRegdate"/>
+		<association property="rpWriter" column="memNum" javaType="memberA" resultMap="memberReply"/>
+		<association property="rpBoard" column="bNum" javaType="boardA" resultMap="boardReply"/>
+	</resultMap>
+	
+	<!-- 작성자 매핑 -->
+	<resultMap type="memberA" id="memberReply">
+		<id property="memNum" column="memNum"/>
+		<result property="id" column="id"/>
+		<result property="memName" column="memName"/>
+	</resultMap>
+	
+	<!-- 게시물 매핑 -->
+	<resultMap type="boardA" id="boardReply">
+		<id property="bNum" column="bNum"/>
+	</resultMap>
+	
+</mapper>

@@ -1,0 +1,16 @@
+select * from 
+( select b.bNum as b_num,
+b.bTitle as b_title,
+b.bView as b_view,
+b.bRef as b_ref,
+b.bStep as b_step,
+b.bRefOrder as b_refOrder,
+b.bAnswerCnt as b_answerCnt,
+b.bParentNum as b_parentNum,
+b.bDeleteflag as b_deleteflag,
+b.bRegdate as b_regdate,
+m.memNum as m_memNum,
+m.memName as m_memName
+from board b left outer join member m on b.bWriter=m.memNum
+order by b.bRef desc,b.bRefOrder asc
+) where rownum>=1 and rownum<=10;

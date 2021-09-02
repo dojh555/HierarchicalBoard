@@ -1,0 +1,38 @@
+프로젝트 이름 : studyboard
+package : com.commu.studyboard
+
+1. 인코딩 추가 web.xml
+
+2. 라이브러리 : pom.xml
+- mybatis
+- tiles
+
+3. root-context
+   oracle, mybatis
+   - mybatis-config 경로 설정
+
+4. DTO.java
+
+5. mybatis-config.xml
+src/main/resources/mybatis/mybatis-config.xml
+   - mapper xml 경로 설정
+
+6. mapper xml 버전
+src/main/resources/mybatis/mapper(board,member등).xml
+   - UML
+
+7. tiles
+WEB-INF/spring/appServlet/servlet-context.xml
+WEB-INF/tiles.xml
+views/inc (tiles)
+
+8. Controller.java
+   - UML
+   
+9. views
+/board
+/member
+   - UML
+  
+티스토리 댓글 javascript :
+https://t1.daumcdn.net/tistory_admin/assets/blog/tistory-8f6d2ea54a4c83eb5a4f2ba456a155924effac01/blogs/script/blog/common.js?_version_=tistory-8f6d2ea54a4c83eb5a4f2ba456a155924effac01

@@ -1,0 +1,114 @@
+User: scott
+
+- member Table
+
+create table member(
+	memNum number not null primary key,
+	id varchar2(12) not null,
+	pw varchar2(20) not null,
+	memName varchar2(60) not null,
+	memBirth date,
+	memTel varchar2(13),
+	memEmail varchar2(64) not null,
+	memPost varchar2(5),
+	memAddress varchar2(120),
+	memAddress_detail varchar(300),
+	memJdate date not null
+);  
+
+* 시퀀스 생성
+create sequence member_seq;
+
+--지울때
+drop sequence member_seq;
+
+--일련번호 삽입시
+insert into member(memNum,...) values(member_seq.nextval,...)
+
+memNum				//회원 일련번호
+id					//회원 아이디
+pw					//회원 비밀번호
+
+memName				//회원이름
+memBirth			//회원 생년월일
+memTel				//회원 전화번호
+memEmail			//회원 이메일
+
+memPost				//회원 우편번호
+memAddress			//회원 주소
+memAddress_detail	//회원 상세주소
+
+memJdate			//회원 가입일
+===================================
+- board Table
+
+create table board(
+	bNum number not null primary key,
+	bWriter number,
+	bTitle varchar2(300) not null,
+	bContent varchar2(3000) not null,
+	bView number default 0 not null ,
+	bRef number not null,
+	bStep number not null,
+	bRefOrder number not null,
+	bAnswerCnt number default 0 not null,
+	bParentNum number,
+	bRegdate date,
+	bDeleteflag char(6) default '정상' not null,
+	CONSTRAINTS board_bWriter_fk FOREIGN KEY(bWriter)
+	REFERENCES member(memNum) ON DELETE SET NULL
+);
+
+* 제약조건추가
+ALTER TABLE board ADD CONSTRAINT bDeleteflag_check CHECK(bDeleteflag = '정상' or bDeleteflag = '삭제')
+
+* 시퀀스 생성
+create sequence board_seq;
+
+	
+bNum		//게시물 일련번호
+bWriter		//게시물 글쓴이
+	
+bTitle		//게시물 제목
+bContent	//게시물 내용
+bView		//게시물 조회수
+	
+bRef		//글그룹
+bStep		//원글 0 ,댓글 1~
+bRefOrder	//글그룹 정렬
+
+bAnswerCnt	//댓글 수
+bParentNum	//원글 일련번호
+
+bRegdate	//게시물 작성일
+bDeleteflag	//게시물 삭제여부 - 정상, 삭제 , default = 정상
+===================================
+
+- comment Table
+
+create table reply(
+	rpNum number,
+	rpWriter number,
+	rpBNum number,
+	rpContent varchar2(3000) not null,
+	rpRegdate date,
+	CONSTRAINTS reply_rpNum_pk primary key(rpNum),
+	CONSTRAINTS reply_rpWriter_fk FOREIGN KEY(rpWriter)
+	REFERENCES member(memNum) ON DELETE SET NULL,
+	CONSTRAINTS reply_rpBNum_fk FOREIGN KEY(rpBNum)
+	REFERENCES board(bNum) ON DELETE SET NULL
+);
+
+* 시퀀스 생성
+create sequence reply_seq;
+
+
+rpNum		//댓글 일련번호
+rpWriter	//댓글 작성자
+rpBNum		//댓글이 달린 게시물번호
+rpContent	//댓글 내용
+rpRegdate	//댓글 작성일
+
+
+
+where rpBNum=1

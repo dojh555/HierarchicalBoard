@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="board">
+
+	<!-- 게시물 작성 -->
+ 	<insert id="insertBoard" parameterType="boardA" useGeneratedKeys="true" keyColumn="bNum" keyProperty="bNum">
+		insert into board(bNum,bWriter,bTitle,bContent,bRef,bStep,bRefOrder,bParentNum,bRegdate)
+		values(board_seq.nextval,#{bWriter.memNum},#{bTitle},#{bContent},#{bRef},#{bStep},#{bRefOrder},#{bParentNum},SYSDATE)	
+	</insert>
+	
+	<!-- 글 갯수 -->
+	<select id="countBoard" resultType="int">
+		select count(*) from board
+	</select>
+	
+	<!-- 답글 끼워넣기 위치 확보 -->
+	<update id="updateRefCount" parameterType="boardA">
+		update board set bRefOrder=bRefOrder+1
+		where bRef=#{bRef} and bRefOrder>#{bRefOrder}
+	</update>
+	
+	<!-- 게시물 상세보기 출력 -->
+	<select id="selectOneBoard" parameterType="Integer" resultMap="selectMap">
+		select b.bNum as b_num,
+		b.bTitle as b_title,
+		b.bContent as b_content,
+		b.bView as b_view,
+		b.bRef as b_ref,
+		b.bStep as b_step,
+		b.bRefOrder as b_refOrder,
+		b.bAnswerCnt as b_answerCnt,
+		b.bParentNum as b_parentNum,
+		b.bDeleteflag as b_deleteflag,
+		b.bRegdate as b_regdate,
+		m.memNum as m_memNum,
+		m.memName as m_memName
+		from board b left outer join member m on b.bWriter=m.memNum
+		where b.bNum=#{bNum}
+	</select>
+	
+	<!-- 게시물 리스트 출력 -->
+	<select id="selectListBoard" resultMap="selectListMap" parameterType="java.util.Map">
+		select * from (select ROW_NUMBER() OVER(ORDER BY b.bRef desc,b.bRefOrder asc) row_num,
+		b.bNum as b_num,
+		b.bTitle as b_title,
+		b.bView as b_view,
+		b.bRef as b_ref,
+		b.bStep as b_step,
+		b.bRefOrder as b_refOrder,
+		b.bAnswerCnt as b_answerCnt,
+		b.bParentNum as b_parentNum,
+		b.bDeleteflag as b_deleteflag,
+		b.bRegdate as b_regdate,
+		m.memNum as m_memNum,
+		m.memName as m_memName
+		from board b left outer join member m on b.bWriter=m.memNum
+		order by b.bRef desc,b.bRefOrder asc)
+		where row_num>=#{contentStartNum} and row_num<![CDATA[ <= ]]>#{contentLastNum}
+	</select>
+	
+	<!-- 회원정보 게시물 이력 작성 -->
+	<select id=""></select>
+	
+	<!-- 조회수 증가 -->
+	<update id="updateView" parameterType="Integer">
+		update board set bView=bView+1
+		where bNum=#{bNum}
+	</update>
+	
+	
+	<!-- DB 글 수정 -->
+	<update id="updateBoard" parameterType="boardA">
+		update board set bTitle=#{bTitle},bContent=#{bContent}
+		where bNum=#{bNum}
+	</update>
+	
+	<!-- 글삭제 -->
+	<update id="deleteBoard" parameterType="boardA">
+		update board set bTitle='삭제된 게시물입니다.',bContent='삭제된 게시물입니다.',bDeleteflag='삭제'
+		where bNum=#{bNum}
+	</update>
+
+	<!-- 답글 수 증가 -->
+	<update id="upAnswerCnt" parameterType="Integer">
+		update board set bAnswerCnt=bAnswerCnt+1
+		where bNum=#{bNum}
+	</update>
+	
+	<!-- 답글 수 감소 -->
+	<update id="downAnswerCnt" parameterType="Integer">
+		update board set bAnswerCnt=bAnswerCnt-1
+		where bNum=#{bNum}
+	</update>
+	
+	<!-- 답글 수 출력 -->
+	<select id="selectAnswerCnt" resultType="Integer" parameterType="Integer">
+		select bAnswerCnt from board
+		where bNum=#{bNum}
+	</select>
+		
+	<!-- 게시물 리스트 resultMap -->
+	<resultMap id="selectListMap" type="boardA">
+		<id property="bNum" column="b_num"/>
+		<result property="bTitle" column="b_title"/>
+		<result property="bView" column="b_view"/>
+		<result property="bRef" column="b_ref"/>
+		<result property="bStep" column="b_step"/>
+		<result property="bRefOrder" column="b_refOrder"/>
+		<result property="bAnswerCnt" column="b_answerCnt"/>
+		<result property="bParentNum" column="b_parentNum"/>
+		<result property="bDeleteflag" column="b_deleteflag"/>
+		<result property="bRegdate" column="b_regdate"/>
+		<association property="bWriter" column="m_memNum" javaType="memberA" resultMap="memberResult"/>
+	</resultMap>
+	
+	<!-- 게시물 상세보기 resultMap : bContent 포함 -->
+	<resultMap id="selectMap" type="boardA">
+		<id property="bNum" column="b_num"/>
+		<result property="bTitle" column="b_title"/>
+		<result property="bContent" column="b_content"/>
+		<result property="bView" column="b_view"/>
+		<result property="bRef" column="b_ref"/>
+		<result property="bStep" column="b_step"/>
+		<result property="bRefOrder" column="b_refOrder"/>
+		<result property="bAnswerCnt" column="b_answerCnt"/>
+		<result property="bParentNum" column="b_parentNum"/>
+		<result property="bDeleteflag" column="b_deleteflag"/>
+		<result property="bRegdate" column="b_regdate"/>
+		<association property="bWriter" column="m_memNum" javaType="memberA" resultMap="memberResult"/>
+	</resultMap>
+	
+	<!-- board resultMap의 공통 member select -->
+	<resultMap type="memberA" id="memberResult">
+		<id property="memNum" column="m_memNum"/>
+		<result property="memName" column="m_memName"/>
+	</resultMap>
+</mapper>
